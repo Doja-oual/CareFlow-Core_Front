@@ -7,12 +7,14 @@ interface SidebarItemProps {
   icon: ReactNode
   label: string
   badge?: number
+  onClick?: () => void
 }
 
-export const SidebarItem = ({ to, icon, label, badge }: SidebarItemProps) => {
+export const SidebarItem = ({ to, icon, label, badge, onClick }: SidebarItemProps) => {
   return (
     <NavLink
       to={to}
+      onClick={onClick}
       className={({ isActive }) =>
         cn(
           'flex items-center justify-between px-4 py-3 text-sm font-medium rounded-lg transition-colors',
@@ -28,7 +30,7 @@ export const SidebarItem = ({ to, icon, label, badge }: SidebarItemProps) => {
       </div>
       {badge !== undefined && badge > 0 && (
         <span className="inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-danger-500 rounded-full">
-          {badge}
+          {badge > 99 ? '99+' : badge}
         </span>
       )}
     </NavLink>

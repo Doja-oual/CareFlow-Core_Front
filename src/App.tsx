@@ -1,13 +1,13 @@
-import { useState } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthLayout } from './layouts/AuthLayout'
 import { MainLayout } from './layouts/MainLayout'
+import { UserRole } from './constants/roles'
 
-// Pages temporaires pour démo
+// Pages temporaires
 const LoginPage = () => (
   <div className="bg-white p-8 rounded-lg shadow-md">
     <h2 className="text-2xl font-bold text-gray-900 mb-6">Connexion</h2>
-    <p className="text-gray-600">Page de connexion (à développer)</p>
+    <p className="text-gray-600">Page de connexion</p>
   </div>
 )
 
@@ -35,51 +35,66 @@ const AppointmentsPage = () => (
   <div>
     <h1 className="text-3xl font-bold text-gray-900 mb-6">Rendez-vous</h1>
     <div className="bg-white p-6 rounded-lg shadow-md">
-      <p className="text-gray-600">Liste des rendez-vous (à développer)</p>
+      <p className="text-gray-600">Liste des rendez-vous</p>
     </div>
   </div>
 )
 
-const PatientsPage = () => (
+const AppointmentDetailsPage = () => (
   <div>
-    <h1 className="text-3xl font-bold text-gray-900 mb-6">Patients</h1>
+    <h1 className="text-3xl font-bold text-gray-900 mb-6">Détails du rendez-vous</h1>
     <div className="bg-white p-6 rounded-lg shadow-md">
-      <p className="text-gray-600">Liste des patients (à développer)</p>
+      <p className="text-gray-600">Détails du rendez-vous #123</p>
     </div>
   </div>
 )
 
 function App() {
+  // Simuler un utilisateur connecté avec un rôle
+  const currentUserRole = UserRole.DOCTOR
+
   return (
     <BrowserRouter>
       <Routes>
-        {/* Routes publiques avec AuthLayout */}
-        <Route path="/login" element={
-          <AuthLayout>
-            <LoginPage />
-          </AuthLayout>
-        } />
+        {/* Routes publiques */}
+        <Route
+          path="/login"
+          element={
+            <AuthLayout>
+              <LoginPage />
+            </AuthLayout>
+          }
+        />
 
-        {/* Routes protégées avec MainLayout */}
-        <Route path="/dashboard" element={
-          <MainLayout>
-            <DashboardPage />
-          </MainLayout>
-        } />
+        {/* Routes protégées */}
+        <Route
+          path="/dashboard"
+          element={
+            <MainLayout userRole={currentUserRole}>
+              <DashboardPage />
+            </MainLayout>
+          }
+        />
         
-        <Route path="/appointments" element={
-          <MainLayout>
-            <AppointmentsPage />
-          </MainLayout>
-        } />
+        <Route
+          path="/appointments"
+          element={
+            <MainLayout userRole={currentUserRole}>
+              <AppointmentsPage />
+            </MainLayout>
+          }
+        />
         
-        <Route path="/patients" element={
-          <MainLayout>
-            <PatientsPage />
-          </MainLayout>
-        } />
+        <Route
+          path="/appointments/:id"
+          element={
+            <MainLayout userRole={currentUserRole}>
+              <AppointmentDetailsPage />
+            </MainLayout>
+          }
+        />
 
-        {/* Redirection par défaut */}
+        {/* Redirection */}
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     </BrowserRouter>

@@ -1,21 +1,17 @@
+import { UserRole } from '@/constants/roles'
+import { getMenuItemsByRole } from '@/constants/navigation'
 import { SidebarItem } from './SidebarItem'
 import { cn } from '@/utils/cn'
 
 interface SidebarProps {
   isOpen: boolean
   onClose: () => void
+  userRole?: UserRole
 }
 
-export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
-  const menuItems = [
-    { to: '/dashboard', icon: '📊', label: 'Tableau de bord' },
-    { to: '/appointments', icon: '📅', label: 'Rendez-vous', badge: 3 },
-    { to: '/patients', icon: '👥', label: 'Patients' },
-    { to: '/prescriptions', icon: '💊', label: 'Prescriptions' },
-    { to: '/lab-orders', icon: '🧪', label: 'Analyses', badge: 1 },
-    { to: '/documents', icon: '📄', label: 'Documents' },
-    { to: '/users', icon: '👤', label: 'Utilisateurs' },
-  ]
+export const Sidebar = ({ isOpen, onClose, userRole = UserRole.DOCTOR }: SidebarProps) => {
+  // Récupérer les items de menu selon le rôle
+  const menuItems = getMenuItemsByRole(userRole)
 
   return (
     <>
@@ -24,6 +20,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
         <div
           className="fixed inset-0 bg-gray-600 bg-opacity-75 z-20 lg:hidden"
           onClick={onClose}
+          aria-hidden="true"
         />
       )}
 
@@ -40,9 +37,11 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
             <span className="text-xl font-bold text-primary-600">
               🏥 Careflow
             </span>
+            {/* Bouton fermer (mobile uniquement) */}
             <button
               onClick={onClose}
-              className="lg:hidden text-gray-500 hover:text-gray-700"
+              className="lg:hidden text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 rounded-md p-1"
+              aria-label="Fermer le menu"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -59,6 +58,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                 icon={item.icon}
                 label={item.label}
                 badge={item.badge}
+                onClick={() => onClose()} // Fermer sur mobile après clic
               />
             ))}
           </nav>
